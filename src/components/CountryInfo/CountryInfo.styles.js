@@ -3,7 +3,7 @@ import { red } from '@material-ui/core/colors';
 
 export const useStyles = makeStyles((theme) => ({
     avatar: {
-        backgroundColor: red[500], 
+        backgroundColor: red[500],
     },
     logo: {
         height: theme.spacing(50),
@@ -20,5 +20,11 @@ export const useStyles = makeStyles((theme) => ({
     },
     card: {
         marginBottom: theme.spacing(2)
+    },
+    spinner: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
     }
 }))

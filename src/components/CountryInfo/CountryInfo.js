@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { Avatar, Card, CardContent, CardHeader, CardMedia, Container, Divider, Grid, Typography } from '@material-ui/core';
+import { Avatar, Card, CardContent, CardHeader, CardMedia, CircularProgress, Container, Divider, Grid, Typography } from '@material-ui/core';
 
 import AppLayout from '../common/AppLayout';
 import { getCountryCases, getCountryHistory, getCountryVaccines } from '../../services/covidServices';
@@ -46,12 +46,13 @@ const CountryInfo = () => {
     }
 
     let countryFound = servicesLoaded &&
-        Object.keys(casesInfo).length > 0 &&
-        Object.keys(vaccineInfo).length > 0 &&
-        Object.keys(countryInfo).length > 0
+        (casesInfo && Object.keys(casesInfo).length > 0) &&
+        (vaccineInfo && Object.keys(vaccineInfo).length) > 0 &&
+        (countryInfo && Object.keys(countryInfo).length > 0);
+    console.log(countryFound)
 
     const CountryInfo = () => {
-        return countryFound && <Grid container spacing={3}>
+        return <Grid container spacing={3}>
             <Grid item sm={6} xs={12}>
                 <Card>
                     <CardHeader
@@ -60,7 +61,7 @@ const CountryInfo = () => {
                         </Avatar>}
                         title={countryName}
                         subheader={`Última actualización ${vaccineInfo.updated}`} />
-                    {Object.keys(countryInfo).length === 0
+                    {countryInfo && Object.keys(countryInfo).length === 0
                         ? <Skeleton variant="circle" height={400} className={classes.logo} />
                         : <CardMedia
                             image={countryInfo.coatOfArms && countryInfo.coatOfArms.svg}
@@ -70,35 +71,35 @@ const CountryInfo = () => {
                         <Divider />
                         <div className={classes.info}>
                             <Typography variant='subtitle1' component='p'>Población</Typography>
-                            {Object.keys(vaccineInfo).length === 0
+                            {vaccineInfo && Object.keys(vaccineInfo).length === 0
                                 ? <Skeleton variant="text" className={classes.textSkeleton} />
                                 : <Typography>{vaccineInfo.population}</Typography>}
                         </div>
                         <Divider />
                         <div className={classes.info}>
                             <Typography variant='subtitle1' component='p'>Área</Typography>
-                            {Object.keys(vaccineInfo).length === 0
+                            {vaccineInfo && Object.keys(vaccineInfo).length === 0
                                 ? <Skeleton variant="text" className={classes.textSkeleton} />
                                 : <Typography>{vaccineInfo.sq_km_area} km2</Typography>}
                         </div>
                         <Divider />
                         <div className={classes.info}>
                             <Typography variant='subtitle1' component='p'>Vacunas administradas</Typography>
-                            {Object.keys(vaccineInfo).length === 0
+                            {vaccineInfo && Object.keys(vaccineInfo).length === 0
                                 ? <Skeleton variant="text" className={classes.textSkeleton} />
                                 : <Typography>{vaccineInfo.administered}</Typography>}
                         </div>
                         <Divider />
                         <div className={classes.info}>
                             <Typography variant='subtitle1' component='p'>Vacunados completamente</Typography>
-                            {Object.keys(vaccineInfo).length === 0
+                            {vaccineInfo && Object.keys(vaccineInfo).length === 0
                                 ? <Skeleton variant="text" className={classes.textSkeleton} />
                                 : <Typography>{vaccineInfo.people_vaccinated}</Typography>}
                         </div>
                         <Divider />
                         <div className={classes.info}>
                             <Typography variant='subtitle1' component='p'>Vacunados parcialmente</Typography>
-                            {Object.keys(vaccineInfo).length === 0
+                            {vaccineInfo && Object.keys(vaccineInfo).length === 0
                                 ? <Skeleton variant="text" className={classes.textSkeleton} />
                                 : <Typography>{vaccineInfo.people_partially_vaccinated}</Typography>}
                         </div>
@@ -138,13 +139,19 @@ const CountryInfo = () => {
                     )}
                 </Card>
             </Grid>
-        </Grid>;
+        </Grid>
     }
 
     return (
-        <AppLayout country={countryName} casesInfo={countryFound ? casesInfo : null} emptyCountryInfo={emptyCountryInfo}>
+        <AppLayout country={countryName} casesInfo={casesInfo} emptyCountryInfo={emptyCountryInfo}>
             <Container maxWidth='xl'>
-                {CountryInfo()}
+                {countryFound ? <CountryInfo /> : (
+                    <div className={classes.spinner} >
+                        <Typography variant='h4' align='center'>Buscando información del país</Typography>
+                        <CircularProgress color="secondary" />
+                        <Typography variant='h5' align='center'>*Si tarda mucho ingresa el nombre del país en inglés o revisa si esta escrito correctamente</Typography>
+                    </div>
+                )}
             </Container>
         </AppLayout>
     )
