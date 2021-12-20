@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { AppBar, Container, IconButton, InputBase, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, IconButton, InputBase, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import SearchIcon from '@material-ui/icons/Search'
@@ -12,7 +12,7 @@ import SignalCellularConnectedNoInternet0BarIcon from '@material-ui/icons/Signal
 import { useStyles } from './AppLayout.styles'
 
 const AppLayout = (props) => {
-    const { country } = props;
+    const { country, casesInfo } = props;
 
     const classes = useStyles();
     const navigate = useNavigate();
@@ -42,20 +42,25 @@ const AppLayout = (props) => {
         >
             <MenuItem>
                 <Typography className={classes.infoSection}>
+                    Población: <b style={{marginLeft: '8px'}}>{casesInfo && casesInfo.population}</b>
+                </Typography>
+            </MenuItem>
+            <MenuItem>
+                <Typography className={classes.infoSection}>
                     <AirlineSeatIndividualSuiteIcon className={classes.sectionIcon} />
-                    Confirmed
+                    {casesInfo && casesInfo.confirmed}
                 </Typography>
             </MenuItem>
             <MenuItem>
                 <Typography className={classes.infoSection}>
                     <DirectionsRunIcon className={classes.sectionIcon} />
-                    Recovered
+                    {casesInfo && casesInfo.recovered}
                 </Typography>
             </MenuItem>
             <MenuItem>
                 <Typography className={classes.infoSection}>
                     <SignalCellularConnectedNoInternet0BarIcon className={classes.sectionIcon} />
-                    Death
+                    {casesInfo && casesInfo.deaths}
                 </Typography>
             </MenuItem>
         </Menu >
@@ -87,6 +92,12 @@ const AppLayout = (props) => {
                                 placeholder="Buscar por país..."
                                 inputProps={{ 'aria-label': 'search' }}
                                 onChange={(e) => setNewCountry(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        navigate(`/country/${newCountry}`)
+                                        setNewCountry('')
+                                    }
+                                }}
                                 value={newCountry}
                             />
                             <IconButton
@@ -95,6 +106,7 @@ const AppLayout = (props) => {
                                     navigate(`/country/${newCountry}`)
                                     setNewCountry('')
                                 }}
+
                             >
                                 <SearchIcon />
                             </IconButton>
@@ -103,15 +115,15 @@ const AppLayout = (props) => {
                         <div className={classes.sectionDesktop}>
                             <Typography className={classes.infoSection}>
                                 <AirlineSeatIndividualSuiteIcon className={classes.sectionIcon} />
-                                Confirmed
+                                {casesInfo && casesInfo.confirmed}
                             </Typography>
                             <Typography className={classes.infoSection}>
                                 <DirectionsRunIcon className={classes.sectionIcon} />
-                                Recovered
+                                {casesInfo && casesInfo.recovered}
                             </Typography>
                             <Typography className={classes.infoSection}>
                                 <SignalCellularConnectedNoInternet0BarIcon className={classes.sectionIcon} />
-                                Death
+                                {casesInfo && casesInfo.deaths}
                             </Typography>
                         </div>
                         <div className={classes.sectionMobile}>
@@ -129,9 +141,9 @@ const AppLayout = (props) => {
                 </AppBar>
             </div>
             {renderMobileMenu}
-            <Container className={classes.container} maxWidth='xl'>
+            <div className={classes.container}>
                 {props.children}
-            </Container>
+            </div>
         </>
     )
 }
