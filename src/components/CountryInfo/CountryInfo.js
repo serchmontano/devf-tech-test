@@ -23,15 +23,19 @@ const CountryInfo = () => {
 
     const [servicesLoaded, setServicesLoaded] = useState(false)
 
-    useEffect(async () => {
-        setCasesInfo(await getCountryCases(countryName));
-        setVaccineInfo(await getCountryVaccines(countryName));
-        setCountryInfo(await getCountryInfo(countryName));
+    useEffect(() => {
+        async function servicesCall() {
+            setCasesInfo(await getCountryCases(countryName));
+            setVaccineInfo(await getCountryVaccines(countryName));
+            setCountryInfo(await getCountryInfo(countryName));
 
-        setConfirmedInfo(await getCountryHistory(countryName, 'Confirmed'))
-        setDeceasedInfo(await getCountryHistory(countryName, 'Deaths'))
+            setConfirmedInfo(await getCountryHistory(countryName, 'Confirmed'))
+            setDeceasedInfo(await getCountryHistory(countryName, 'Deaths'))
 
-        setServicesLoaded(true)
+            setServicesLoaded(true)
+        }
+
+        servicesCall()
     }, [countryName])
 
     const emptyCountryInfo = () => {

@@ -8,7 +8,7 @@ import AppLayout from '../common/AppLayout'
 import CountryMap from './CountryMap'
 import { useStyles } from './Home.styles';
 
-import { getWorldCases, getWorldHistory } from '../../services/covidServices'
+import { getWorldCases } from '../../services/covidServices'
 import { CASES_STATUS } from '../../utils/constants';
 
 const colorScale = scaleLinear()
@@ -21,8 +21,11 @@ const Home = () => {
     const [status, setStatus] = useState('confirmed')
     const [data, setData] = useState([]);
 
-    useEffect(async () => {
-        setData(await getWorldCases())
+    useEffect(() => {
+        async function callService() {
+            setData(await getWorldCases())
+        }
+        callService()
     }, [status])
 
     return (
