@@ -1,4 +1,4 @@
-import covidAPI from '../utils/axios'
+import { covidAPI } from '../utils/axios'
 import covidPaths from '../utils/apiPaths'
 
 export const getWorldCases = async () => {

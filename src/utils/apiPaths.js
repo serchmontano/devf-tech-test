@@ -4,5 +4,7 @@ export default {
     // Historical cases data
     history: '/history',
     // Vaccines data
-    vacines: '/vaccines'
+    vacines: '/vaccines',
+    // Country name
+    countryInfo: '/name'
 }

@@ -13,6 +13,7 @@ const geoUrl =
 
 const CountryMap = ({ data, status }) => {
     const navigate = useNavigate();
+    const factor = status === 'confirmed' ? 10 : 250
     return (
         <ComposableMap
             projectionConfig={{
@@ -26,7 +27,7 @@ const CountryMap = ({ data, status }) => {
                 <Geographies geography={geoUrl}>
                     {({ geographies }) => geographies.map((geo) => {
                         const d = data.find((s) => s[1].All.abbreviation === geo.properties.ISO_A2)
-                        const amount = d ? d[1].All[status]*10/(d[1].All.population) : 0
+                        const amount = d ? d[1].All[status]*factor/(d[1].All.population) : 0
                         return (
                             <Geography
                                 key={geo.rsmKey}

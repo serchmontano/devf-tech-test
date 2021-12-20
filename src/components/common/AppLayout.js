@@ -12,7 +12,7 @@ import SignalCellularConnectedNoInternet0BarIcon from '@material-ui/icons/Signal
 import { useStyles } from './AppLayout.styles'
 
 const AppLayout = (props) => {
-    const { country, casesInfo } = props;
+    const { country, casesInfo, emptyCountryInfo } = props;
 
     const classes = useStyles();
     const navigate = useNavigate();
@@ -94,6 +94,7 @@ const AppLayout = (props) => {
                                 onChange={(e) => setNewCountry(e.target.value)}
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
+                                        emptyCountryInfo()
                                         navigate(`/country/${newCountry}`)
                                         setNewCountry('')
                                     }
@@ -103,6 +104,7 @@ const AppLayout = (props) => {
                             <IconButton
                                 className={classes.searchIcon}
                                 onClick={() => {
+                                    emptyCountryInfo()
                                     navigate(`/country/${newCountry}`)
                                     setNewCountry('')
                                 }}
