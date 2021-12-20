@@ -64,3 +64,25 @@ export const getCountryVaccines = async (country) => {
         return {}
     }
 }
+
+export const getCountryHistory = async (country, status) => {
+    try {
+        const countryHistory = await covidAPI.get(covidPaths.history, {
+            params: {
+                country,
+                status
+            }
+        })
+        if (countryHistory.status === 200) {
+            let data = []
+            Object.entries(countryHistory.data.All.dates).forEach(element => {
+                data.push({x: element[0], y: element[1]})
+            })
+            return data.reverse()
+        } else {
+            return []
+        }
+    } catch (e) {
+        return []
+    }
+}

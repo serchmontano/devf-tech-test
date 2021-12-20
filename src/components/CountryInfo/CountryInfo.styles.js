@@ -17,5 +17,8 @@ export const useStyles = makeStyles((theme) => ({
         margin: `${theme.spacing(1)}px auto`,
         display: 'flex',
         justifyContent: 'space-between'
+    },
+    card: {
+        marginBottom: theme.spacing(2)
     }
 }))

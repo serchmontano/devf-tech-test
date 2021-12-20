@@ -4,10 +4,11 @@ import { useParams } from 'react-router-dom'
 import { Avatar, Card, CardContent, CardHeader, CardMedia, Container, Divider, Grid, Typography } from '@material-ui/core';
 
 import AppLayout from '../common/AppLayout';
-import { getCountryCases, getCountryVaccines } from '../../services/covidServices';
+import { getCountryCases, getCountryHistory, getCountryVaccines } from '../../services/covidServices';
 import { useStyles } from './CountryInfo.styles';
 import { getCountryInfo } from '../../services/countryServices';
 import { Skeleton } from '@material-ui/lab';
+import { VictoryArea, VictoryChart } from 'victory';
 
 const CountryInfo = () => {
     const classes = useStyles();
@@ -16,12 +17,20 @@ const CountryInfo = () => {
     const [casesInfo, setCasesInfo] = useState({});
     const [vaccineInfo, setVaccineInfo] = useState({});
     const [countryInfo, setCountryInfo] = useState({});
+
+    const [deceasedInfo, setDeceasedInfo] = useState([])
+    const [confirmedInfo, setConfirmedInfo] = useState([])
+
     const [servicesLoaded, setServicesLoaded] = useState(false)
 
     useEffect(async () => {
         setCasesInfo(await getCountryCases(countryName));
         setVaccineInfo(await getCountryVaccines(countryName));
-        setCountryInfo(await getCountryInfo(countryName))
+        setCountryInfo(await getCountryInfo(countryName));
+
+        setConfirmedInfo(await getCountryHistory(countryName, 'Confirmed'))
+        setDeceasedInfo(await getCountryHistory(countryName, 'Deaths'))
+
         setServicesLoaded(true)
     }, [countryName])
 
@@ -29,11 +38,20 @@ const CountryInfo = () => {
         setCasesInfo({})
         setVaccineInfo({})
         setCountryInfo({})
+
+        setConfirmedInfo([])
+        setDeceasedInfo([])
+
         setServicesLoaded(false)
     }
 
+    let countryFound = servicesLoaded &&
+        Object.keys(casesInfo).length > 0 &&
+        Object.keys(vaccineInfo).length > 0 &&
+        Object.keys(countryInfo).length > 0
+
     const CountryInfo = () => {
-        return <Grid container spacing={3}>
+        return countryFound && <Grid container spacing={3}>
             <Grid item sm={6} xs={12}>
                 <Card>
                     <CardHeader
@@ -88,15 +106,43 @@ const CountryInfo = () => {
                 </Card>
             </Grid>
             <Grid item sm={6} xs={12}>
-                <Card>
+                <Card className={classes.card}>
+                    <Typography variant='h5' align='center'>Confirmados</Typography>
+                    {confirmedInfo.length > 0 ? (
+                        <VictoryChart>
+                            <VictoryArea
+                                style={{
+                                    data: { fill: "green" }
+                                }}
+                                data={confirmedInfo}
 
+                            />
+                        </VictoryChart>
+                    ) : (
+                        <Skeleton variant='rect' height={400} />
+                    )}
+                </Card>
+                <Card className={classes.card}>
+                    <Typography variant='h5' align='center'>Muertos</Typography>
+                    {deceasedInfo.length > 0 ? (
+                        <VictoryChart>
+                            <VictoryArea
+                                style={{
+                                    data: { fill: "orange" }
+                                }}
+                                data={deceasedInfo}
+                            />
+                        </VictoryChart>
+                    ) : (
+                        <Skeleton variant='rect' height={400} />
+                    )}
                 </Card>
             </Grid>
         </Grid>;
     }
 
     return (
-        <AppLayout country={countryName} casesInfo={casesInfo} emptyCountryInfo={emptyCountryInfo}>
+        <AppLayout country={countryName} casesInfo={countryFound ? casesInfo : null} emptyCountryInfo={emptyCountryInfo}>
             <Container maxWidth='xl'>
                 {CountryInfo()}
             </Container>
