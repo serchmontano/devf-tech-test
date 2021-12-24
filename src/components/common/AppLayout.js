@@ -94,7 +94,7 @@ const AppLayout = (props) => {
                                 onChange={(e) => setNewCountry(e.target.value)}
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
-                                        emptyCountryInfo()
+                                        emptyCountryInfo && emptyCountryInfo()
                                         navigate(`/country/${newCountry}`)
                                         setNewCountry('')
                                     }
@@ -104,7 +104,7 @@ const AppLayout = (props) => {
                             <IconButton
                                 className={classes.searchIcon}
                                 onClick={() => {
-                                    emptyCountryInfo()
+                                    emptyCountryInfo && emptyCountryInfo()
                                     navigate(`/country/${newCountry}`)
                                     setNewCountry('')
                                 }}

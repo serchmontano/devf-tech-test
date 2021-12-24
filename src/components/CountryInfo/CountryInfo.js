@@ -50,10 +50,8 @@ const CountryInfo = () => {
     }
 
     let countryFound = servicesLoaded &&
-        (casesInfo && Object.keys(casesInfo).length > 0) &&
         (vaccineInfo && Object.keys(vaccineInfo).length) > 0 &&
         (countryInfo && Object.keys(countryInfo).length > 0);
-    console.log(countryFound)
 
     const CountryInfo = () => {
         return <Grid container spacing={3}>
